@@ -1,123 +1,142 @@
-# SecureContact - Next.js Secure Contact Form
+# SecureContact — A Smart, Secure, and AI-Enhanced Contact Form for Modern Web Applications
 
-This is a production-grade, secure, and self-contained contact form application built with Next.js App Router, TypeScript, and Tailwind CSS. All application code is organized within the `/src/app/contact` directory for maximum portability and ease of use. It features server-side validation, an AI-powered spam filter, rate limiting, and email notifications via Nodemailer.
+![Next.js](https://img.shields.io/badge/built%20with-Next.js-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/language-TypeScript-blue?logo=typescript)
+![Tailwind](https://img.shields.io/badge/styled%20with-Tailwind%20CSS-06B6D4?logo=tailwindcss)
+![MIT License](https://img.shields.io/github/license/omprakash24d/contact-us-page)
 
-## Core Features
+SecureContact is a production-ready, self-contained contact form built with **Next.js**, **TypeScript**, and **Tailwind CSS**. It delivers secure email handling, AI-powered spam detection, and a polished UI—all packed in a modular `/src/app/contact` directory.
 
--   **Modern Contact Form UI**: A clean, responsive, and user-friendly contact form with a drag-and-drop file attachment area.
--   **Optional File Attachments**: Allows users to upload files (up to 25MB) with a visual progress indicator during submission.
--   **Data Validation and Sanitization**: Robust server-side validation using Zod to prevent invalid data and security vulnerabilities.
--   **AI-Powered Spam Filter**: Integrates a Genkit AI flow to analyze submissions for spam based on content, IP address, and a honeypot field.
--   **AI-Personalized Responses**: After submission, users receive a unique, AI-generated thank you message that acknowledges the context of their query.
--   **Secure Email Sending**: Uses Nodemailer with Gmail for reliable email delivery, with credentials managed via environment variables.
--   **Customizable Auto-Reply Email**: Automatically sends a beautifully formatted confirmation email to the user, including a copy of their message and attachment details.
--   **IP-based Rate Limiting**: Protects the API from abuse and spam with an in-memory rate limiter (50 requests per 15 minutes per IP).
--   **Honeypot Field**: Includes a hidden form field to trap and block spam bots.
--   **Centralized Logging**: Routes all submission events through a dedicated logging module for easy integration with a database or third-party service.
--   **Security Headers**: Implements key security headers via middleware (`src/middleware.ts`) to protect against common web vulnerabilities.
+---
 
-## Screenshots
+## ✨ Who It's For
 
-**Contact Form Interface:**
-![Contact Form UI](/public/image/contact.png)
+- 💻 **Developers** — who want a feature-rich, plug-and-play contact form.
+- 🏢 **Businesses** — that need reliable user communication with minimal spam.
+- 🎓 **Learners** — curious about how to blend AI and security in modern web apps.
 
-**Submission Success Message:**
-![Success Message](/public/image/success_message.png)
+---
 
-## How It Works: Project Architecture
+## 🚀 Features
 
-All the code for this application is intentionally organized within the `src/app/contact/` directory to make it easy to understand, modify, and reuse. Here's a breakdown of the key components:
+| 🔧 Feature | 💬 Description |
+|-----------|----------------|
+| 🎨 **Modern UI** | Responsive, accessible, drag-and-drop upload form. |
+| 🧼 **Input Validation** | Server-side checks via Zod for security and integrity. |
+| 🧠 **AI Spam Filter** | Genkit-powered detection using input, IP & honeypot. |
+| 💌 **AI Responses** | Personalized confirmation message for each user. |
+| 📎 **Attachments** | Upload files up to 25MB with upload progress UI. |
+| 🛡️ **Security** | Middleware-based HTTP headers & rate limiting (IP-based). |
+| 🔒 **Email Service** | Secure email dispatch via Nodemailer (Gmail). |
+| 🧲 **Anti-Bot Trap** | Honeypot field to catch crawlers. |
+| 🧾 **Central Logging** | Easily swappable logging layer with support for DB services. |
 
--   **`src/app/contact/page.tsx`**: The main UI component for the contact form.
-    -   Built with React, Next.js App Router, and ShadCN UI components.
-    -   Uses the custom `useContactForm` hook to separate logic from presentation.
-    -   Handles UI states like loading spinners, file upload progress, and the final success message.
+---
 
--   **`src/app/contact/api/route.ts`**: The secure backend API endpoint that handles all form submissions.
-    -   **Rate Limiting**: Checks the sender's IP against an in-memory `lru-cache` to prevent spam and abuse.
-    -   **Server-Side Validation**: Re-validates all inputs using `zod` to ensure data integrity.
-    -   **AI Spam Filter**: Calls a Genkit AI flow to analyze the submission for spam signals.
-    -   **AI Response Personalization**: Calls a second Genkit AI flow to generate a custom success message for the user.
-    -   **Email Dispatch**: Uses `nodemailer` to send two separate, professionally formatted HTML emails: a notification to the site administrator (with attachment) and a confirmation auto-reply to the user.
-    -   **Logging**: Records every submission attempt and its outcome using the centralized logging service.
+## 📸 Screenshots
 
--   **`src/app/contact/_ai/`**: This directory contains the AI logic.
-    -   **`spam-filter.ts`**: Defines a Genkit flow that analyzes the submission content, IP address, and honeypot status to return an `isSpam` boolean.
-    -   **`personalize-response.ts`**: Defines a Genkit flow that reads the user's message and generates a short, personalized acknowledgment.
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <strong>📨 Contact Form Interface</strong><br/>
+        <img src="/public/image/contact.png" width="300"/>
+      </td>
+      <td align="center">
+        <strong>✅ Submission Success</strong><br/>
+        <img src="/public/image/success_message.png" width="300"/>
+      </td>
+    </tr>
+  </table>
+</div>
 
--   **`src/app/contact/_hooks/`**: This directory holds the React hooks.
-    -   **`use-contact-form.ts`**: A custom React hook that encapsulates all form state management and submission logic, keeping the main page component clean.
-    -   **`use-toast.ts`**: A custom hook for displaying system-wide toast notifications, used for displaying submission errors.
+---
 
--   **`src/app/contact/_lib/`**: A directory for core utility modules.
-    -   **`schema.ts`**: Defines the Zod schema for both client-side and server-side form validation.
-    -   **`logging.ts`**: A centralized function (`logSubmission`) for logging events. It currently logs to the console but is designed to be easily swapped with a database or a third-party logging service.
-    -   **`rate-limiter.ts`**: Implements the IP-based rate limiting logic.
+## 🧬 Architecture
 
--   **`src/middleware.ts`**: An application-wide middleware file that sets important security headers like X-Frame-Options to protect against common web vulnerabilities.
+```
+User → Frontend (page.tsx) → API (route.ts)
+    → Zod Validation
+    → AI Spam Filter
+    → Personalized Response
+    → Nodemailer Emails
+    → Logging
+```
 
-## Getting Started
+**File Structure Highlights:**
 
-### Prerequisites
+- `src/app/contact/page.tsx`: React-based form UI
+- `api/route.ts`: Backend API handling spam check, email, logging
+- `_ai/`: Genkit flows for spam detection and response personalization
+- `_lib/`: Helpers for schema, rate limiting, logging
+- `middleware.ts`: Sets security headers and CSP
 
--   Node.js (v18 or newer)
--   npm, pnpm, or yarn
--   A Gmail account with an "App Password" for sending emails.
--   A Google AI API Key for the spam filter.
+---
 
-### Installation
+## 🛠 Getting Started
 
-1.  Clone the repository:
-    ```bash
-    git clone <repository_url>
-    cd <repository_name>
-    ```
+### 🔧 Prerequisites
 
-2.  Install the dependencies:
-    ```bash
-    npm install
-    ```
+- Node.js 18+
+- Gmail App Password
+- Google AI API Key
 
-3.  Set up your environment variables. Create a file named `.env.local` in the root of your project and add the following variables:
+### ⚙️ Installation
 
-    ```env
-    # Nodemailer SMTP Configuration for Gmail
-    # You must generate an "App Password" from your Google Account settings.
-    # See: https://support.google.com/accounts/answer/185833
-    SMTP_USER=your-gmail-address@gmail.com
-    SMTP_PASS=your-16-character-app-password
+1. Clone the repo
+   ```bash
+   git clone https://github.com/omprakash24d/contact-us-page
+   cd contact-us-page
+   ```
 
-    # Email addresses for the contact form
-    # FROM_EMAIL should be an address you control and are authorized to use.
-    # Do NOT use the user's submitted email here to avoid spoofing.
-    FROM_EMAIL=noreply@your-domain.com
-    # TO_EMAIL is the address that will receive the contact form submissions.
-    TO_EMAIL=your-inbox@example.com
+2. Install dependencies
+   ```bash
+   npm install
+   ```
 
-    # Your company/site name for the auto-reply email's "From" field. (Optional)
-    FROM_NAME="Your Site Name"
+3. Set up `.env.local`
+   ```env
+   SMTP_USER=your-gmail@gmail.com
+   SMTP_PASS=your-app-password
+   FROM_EMAIL=noreply@yourdomain.com
+   TO_EMAIL=inbox@example.com
+   FROM_NAME="Your Site"
+   GOOGLE_API_KEY=your-google-api-key
+   ```
 
-    # Genkit/Google AI API Key for Spam Filter
-    # Get one from Google AI Studio: https://aistudio.google.com/app/apikey
-    GOOGLE_API_KEY=your-google-api-key
-    ```
+4. Run the dev server
+   ```bash
+   npm run dev
+   ```
 
-4.  Run the development server:
-    ```bash
-    npm run dev
-    ```
+➡ Visit: `http://localhost:9003/contact`
 
-    The application will be available at `http://localhost:9003/contact`.
+---
 
-## Advanced Integration Patterns
+## 🔌 Advanced Enhancements
 
-For even more robust, enterprise-grade applications, consider these improvements:
+- 🧵 **Queued Emailing**: Add BullMQ to avoid timeouts on large emails.
+- 💾 **Persistent Logging**: Integrate with Firestore/MongoDB.
+- 📊 **Spam Scores**: Hook in Akismet or SpamAssassin for granular spam risk.
+- 🧱 **CAPTCHA**: Add Google reCAPTCHA or hCaptcha.
+- 🛡 **CSRF Protection**: Implement a double-submit cookie token pattern.
+- 🧪 **Error Tracking**: Use Sentry to monitor exceptions and submissions.
 
--   **Database Logging**: This project uses a centralized `logSubmission` function. To enable logging to a persistent database (e.g., Firestore, MongoDB), you would edit `src/app/contact/_lib/logging.ts` to connect to your database and write the log entries there.
--   **CAPTCHA**: For even stronger spam protection, integrate a service like Google reCAPTCHA or hCaptcha. This involves adding a client-side component and verifying the token in your API route before processing the form.
--   **Content-Security-Policy (CSP)**: The `src/middleware.ts` file is the ideal place to set a CSP. For production, you may need to tighten or expand this policy based on the specific scripts, styles, and domains your application uses.
--   **CSRF Protection**: While Next.js has some built-in protections, for maximum security implement the double-submit cookie pattern in the top-level `src/middleware.ts` file.
--   **Persistent Rate Limiting**: The `lru-cache` is excellent for single-instance apps. For scalable, multi-instance deployments, replace it with an Upstash Redis or Vercel KV store. The logic remains similar: `await redis.incr(ip)` and `await redis.expire(ip, 900)`.
--   **Email Queuing (BullMQ)**: To prevent API timeouts and handle email failures gracefully, use a background job queue. In the API handler, instead of calling `transporter.sendMail`, you would add a job to a queue (`await emailQueue.add(...)`). A separate worker process would listen to this queue, process the jobs, and handle retries. This makes your API response instant.
--   **Error Tracking (Sentry/LogRocket)**: Wrap your API handler's `try...catch` block with Sentry's instrumentation, or call `Sentry.captureException(error)` in the `catch` block. This gives you real-time alerts and detailed stack traces for any failures.
--   **Advanced Spam Scoring**: For enterprise-grade filtering, you can pass the message content and IP address to an API like Akismet or a self-hosted SpamAssassin instance. Based on the returned score, you could either silently discard the message or flag it for manual review.
+---
+
+## 📚 Documentation & Support
+
+- 📄 [Project Wiki](https://github.com/omprakash24d/contact-us-page/wiki) *(coming soon)*
+- 🐞 [Submit an Issue](https://github.com/omprakash24d/contact-us-page/issues)
+
+---
+
+## 🤝 Contributing
+
+Pull requests, bug reports, and suggestions are always welcome. Let’s make form interactions smarter and more secure, together.
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
